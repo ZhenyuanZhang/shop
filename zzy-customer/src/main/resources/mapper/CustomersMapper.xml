@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.nj.zzy.customer.dao.CustomersMapper">
+
+    <resultMap id="Customer" type="org.nj.zzy.customer.domain.customers">
+        <id column="cust_id" property="id"/>
+        <result column="cust_name" property="name"/>
+        <result column="cust_address" property="address"/>
+        <result column="cust_city" property="city"/>
+        <result column="cust_state" property="state"/>
+        <result column="cust_zip" property="zip"/>
+        <result column="cust_country" property="country"/>
+        <result column="cust_contact" property="contact"/>
+        <result column="cust_email" property="email"/>
+    </resultMap>
+    
+    <sql id="CustomerColumn">
+        cust_id, cust_name, cust_address, cust_city, cust_state, cust_zip, cust_country, cust_contact, cust_email
+    </sql>
+
+    <sql id="QueryCond">
+        <if test="name != null" >
+            <choose>
+                <when test="nameFuzzyQuery">
+                    AND cust_name LIKE concat(#{name}, '%')
+                </when>
+                <otherwise>
+                    AND cust_name = #{name}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="address != null" >
+            <choose>
+                <when test="addressFuzzyQuery">
+                    AND cust_address LIKE concat(#{address}, '%')
+                </when>
+                <otherwise>
+                    AND cust_address = #{address}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="city != null" >
+            <choose>
+                <when test="cityFuzzyQuery">
+                    AND cust_city LIKE concat(#{city}, '%')
+                </when>
+                <otherwise>
+                    AND cust_city = #{city}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="state != null" >
+            <choose>
+                <when test="stateFuzzyQuery">
+                    AND cust_state LIKE concat(#{state}, '%')
+                </when>
+                <otherwise>
+                    AND cust_state = #{state}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="country != null" >
+            <choose>
+                <when test="countryFuzzyQuery">
+                    AND cust_country LIKE concat(#{country}, '%')
+                </when>
+                <otherwise>
+                    AND cust_country = #{country}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="zip != null">
+            AND cust_zip = #{zip}
+        </if>
+    </sql>
+
+    <insert id="insertSelective">
+        <selectKey keyProperty = "id" resultType = "int" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO customers
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                cust_id,
+            <if test = "name != null">
+                cust_name,
+            </if>
+            <if test = "address != null">
+                cust_address,
+            </if>
+            <if test = "city != null">
+                cust_city,
+            </if>
+            <if test = "state != null">
+                cust_state,
+            </if>
+            <if test = "zip != null">
+                cust_zip,
+            </if>
+            <if test = "country != null">
+                cust_country,
+            </if>
+            <if test = "contact != null">
+                cust_contact,
+            </if>
+            <if test = "email != null">
+                cust_email,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                #{id},
+            <if test = "name != null">
+                #{name},
+            </if>
+            <if test = "address != null">
+                #{address},
+            </if>
+            <if test = "city != null">
+                #{city},
+            </if>
+            <if test = "state != null">
+                #{state},
+            </if>
+            <if test = "zip != null">
+                #{zip},
+            </if>
+            <if test = "country != null">
+                #{country},
+            </if>
+            <if test = "contact != null">
+                #{contact},
+            </if>
+            <if test = "email != null">
+                #{email},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="int">
+        UPDATE customers
+        <set>
+            <if test = "name != null">
+                cust_name = #{name},
+            </if>
+            <if test = "address != null">
+                cust_address = #{address},
+            </if>
+            <if test = "city != null">
+                cust_city = #{city},
+            </if>
+            <if test = "state != null">
+                cust_state = #{state},
+            </if>
+            <if test = "zip != null">
+                cust_zip = #{zip},
+            </if>
+            <if test = "country != null">
+                cust_country = #{country},
+            </if>
+            <if test = "contact != null">
+                cust_contact = #{contact},
+            </if>
+            <if test = "country != null">
+                cust_email = #{email},
+            </if>
+        </set>
+        WHERE cust_id = #{id}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="int">
+        DELETE FROM customers WHERE cust_id = #{id}
+    </delete>
+
+    <select id="selectByPrimaryKey" resultMap="Customer">
+        SELECT
+        <include refid="CustomerColumn"/>
+        FROM customers
+        WHERE cust_id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="Customer">
+        SELECT
+        <include refid="CustomerColumn"/>
+        FROM customers
+        <where>
+            <include refid="QueryCond"/>
+        </where>
+        <if test = "page != null">
+            LIMIT #{page.size} OFFSET #{page.offset}
+        </if>
+    </select>
+
+    <select id="countAll" resultType="java.lang.Long">
+        SELECT COUNT(cust_id) FROM customers
+        <where>
+            <include refid="QueryCond"/>
+        </where>
+    </select>
+
+</mapper>

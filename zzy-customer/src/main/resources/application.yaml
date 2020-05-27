@@ -1,0 +1,43 @@
+server:
+  port: 8070
+  servlet:
+    context-path: /nj/zzy
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*Mapper.xml
+
+spring:
+  # 数据库连接信息  DB Configuration:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/shop?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: 123
+  # Redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 1000
+#  data:
+    # MongoDB
+#    mongodb:
+#      host: 127.0.0.1
+#      port: 27017
+#      database: shop
+#      username: zzy
+#      password: 123
+  #国际化相关
+  messages:
+    encoding: UTF-8
+    basename: i18n/messages
+  #微服务名称
+  application:
+    name: customer
+# 开启DEBUG日志模式
+#logging:
+  #level: debug
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:7001/eureka/

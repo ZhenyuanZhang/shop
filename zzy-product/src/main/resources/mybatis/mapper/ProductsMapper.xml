@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.nj.zzy.product.dao.ProductsMapper">
+
+    <resultMap id="Product" type="org.nj.zzy.product.domain.products.Product">
+        <id column="prod_id" property="id"/>
+        <result column="prod_name" property="name"/>
+        <result column="prod_price" property="price"/>
+        <result column="prod_desc" property="desc"/>
+        <result column="vend_id" property="vendorId"/>
+    </resultMap>
+
+    <resultMap id="ProductWithVendor" type="org.nj.zzy.product.domain.products.ProductGetVo">
+        <id column="prod_id" property="id"/>
+        <result column="prod_name" property="name"/>
+        <result column="prod_price" property="price"/>
+        <result column="prod_desc" property="desc"/>
+        <association property="vendor" javaType="org.nj.zzy.product.domain.vendors.Vendor">
+            <id column="vend_id" property="id"/>
+            <result column="vend_name" property="name"/>
+            <result column="vend_address" property="address"/>
+            <result column="vend_city" property="city"/>
+            <result column="vend_state" property="state"/>
+            <result column="vend_zip" property="zip"/>
+            <result column="vend_country" property="country"/>
+        </association>
+    </resultMap>
+
+
+    <sql id="ProductColumn">
+        prod_id, prod_name, prod_price, prod_desc, vend_id
+    </sql>
+
+    <sql id="ProductWithVendorColumn">
+        p.prod_id, p.prod_name, p.prod_price, p.desc, v.vend_id, v.vend_name, v.vend_address, v.vend_city, v.vend_state, v.vend_zip, v.vend_country
+    </sql>
+
+    <sql id="QueryCond">
+        <if test="name != null" >
+            <choose>
+                <when test="nameFuzzyQuery">
+                    AND prod_name LIKE concat(#{name}, '%')
+                </when>
+                <otherwise>
+                    AND prod_name = #{name}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="desc != null" >
+            <choose>
+                <when test="descFuzzyQuery">
+                    AND prod_desc LIKE concat(#{desc}, '%')
+                </when>
+                <otherwise>
+                    AND prod_desc = #{desc}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="maxPrice != null">
+            AND prod_price &lt;= #{maxPrice}
+        </if>
+        <if test="minPrice != null">
+            AND prod_price &gt;= #{minPrice}
+        </if>
+    </sql>
+
+    <insert id="insertSelective">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            SELECT uuid()
+        </selectKey>
+        INSERT INTO products
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                prod_id,
+            <if test="name != null">
+                prod_name,
+            </if>
+            <if test="price != null">
+                prod_price,
+            </if>
+            <if test="desc != null">
+                prod_desc,
+            </if>
+            <if test="vendorId != null">
+                vend_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                #{id},
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="price != null">
+                #{address},
+            </if>
+            <if test="desc != null">
+                #{city},
+            </if>
+            <if test="vendorId != null">
+                #{vendorId},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective">
+        UPDATE products
+        <set>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="price != null">
+                #{address},
+            </if>
+            <if test="desc != null">
+                #{city},
+            </if>
+            <if test="vendorId != null">
+                #{vendorId},
+            </if>
+        </set>
+        WHERE prod_id = #{id}
+    </update>
+
+    <delete id="deleteByPrimaryKey">
+        DELETE FROM products WHERE prod_id = #{id}
+    </delete>
+
+    <select id="selectByPrimaryKey" resultMap="Product">
+        SELECT
+        <include refid="ProductColumn"/>
+        FROM products
+        WHERE prod_id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="Product">
+        SELECT
+        <include refid="ProductColumn"/>
+        FROM products
+        <where>
+            <include refid="QueryCond"/>
+        </where>
+        <if test = "page != null">
+            LIMIT #{page.size} OFFSET #{page.offset}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKeyWithVendor" resultMap="ProductWithVendor">
+        SELECT
+        <include refid="ProductWithVendorColumn"/>
+        FROM products p
+        LEFT JOIN vendors v
+        ON p.vend_id = v.vend_id
+        AND p.pid = {id}
+        <if test = "page != null">
+            LIMIT #{page.size} OFFSET #{page.offset}
+        </if>
+    </select>
+
+    <select id="selectAllWithVendor" resultMap="ProductWithVendor">
+        SELECT
+        <include refid = "ProductWithVendorColumn"/>
+        FROM products p
+        LEFT JOIN vendors v
+        ON p.vend_id = v.vend_id
+        <include refid="QueryCond"/>
+        <if test = "page != null">
+            LIMIT #{page.size} OFFSET #{page.offset}
+        </if>
+    </select>
+
+    <select id="countAll" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM products
+        <where>
+            <include refid="QueryCond"/>
+        </where>
+    </select>
+</mapper>

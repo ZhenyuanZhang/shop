@@ -1,0 +1,14 @@
+server:
+  port: 7001
+spring:
+  application:
+    name: server
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defalutZone: http://localhost:7001/eureka/

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.nj.zzy.product.dao.VendorsMapper">
+
+    <resultMap id="Vendor" type="org.nj.zzy.product.domain.vendors.Vendor">
+        <id column="vend_id" property="id"/>
+        <result column="vend_name" property="name"/>
+        <result column="vend_address" property="address"/>
+        <result column="vend_city" property="city"/>
+        <result column="vend_state" property="state"/>
+        <result column="vend_zip" property="zip"/>
+        <result column="vend_country" property="country"/>
+    </resultMap>
+
+    <resultMap id="VendorWithProducts" type="org.nj.zzy.product.domain.vendors.VendorGetVo">
+        <id column="vend_id" property="id"/>
+        <result column="vend_name" property="name"/>
+        <result column="vend_address" property="address"/>
+        <result column="vend_city" property="city"/>
+        <result column="vend_state" property="state"/>
+        <result column="vend_zip" property="zip"/>
+        <result column="vend_country" property="country"/>
+        <collection property="productList" ofType="org.nj.zzy.product.domain.products.Product">
+            <id column="prod_id" property="id"/>
+            <result column="prod_name" property="name"/>
+            <result column="prod_price" property="price"/>
+            <result column="prod_desc" property="desc"/>
+        </collection>
+    </resultMap>
+    
+    <sql id="VendorColumn">
+        vend_id, vend_name, vend_address, vend_city, vend_state, vend_zip, vend_country
+    </sql>
+
+    <sql id="VendorWithProductsColumn">
+        v.vend_id, v.vend_name, v.vend_address, v.vend_city, v.vend_state, v.vend_zip, v.vend_country, p.prod_id, p.prod_name, p.prod_price, p.prod_desc'
+    </sql>
+
+    <sql id="QueryCond">
+        <if test="name != null" >
+            <choose>
+                <when test="nameFuzzyQuery">
+                    AND vend_name LIKE concat(#{name}, '%')
+                </when>
+                <otherwise>
+                    AND vend_name = #{name}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="address != null" >
+            <choose>
+                <when test="addressFuzzyQuery">
+                    AND vend_address LIKE concat(#{address}, '%')
+                </when>
+                <otherwise>
+                    AND vend_address = #{address}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="city != null" >
+            <choose>
+                <when test="cityFuzzyQuery">
+                    AND vend_city LIKE concat(#{city}, '%')
+                </when>
+                <otherwise>
+                    AND vend_city = #{city}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="state != null" >
+            <choose>
+                <when test="stateFuzzyQuery">
+                    AND vend_state LIKE concat(#{state}, '%')
+                </when>
+                <otherwise>
+                    AND vend_state = #{state}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="country != null" >
+            <choose>
+                <when test="countryFuzzyQuery">
+                    AND vend_country LIKE concat(#{country}, '%')
+                </when>
+                <otherwise>
+                    AND vend_country = #{country}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="zip != null">
+            AND vend_zip = #{zip}
+        </if>
+    </sql>
+
+    <insert id="insertSelective">
+        <selectKey keyProperty = "id" resultType = "int" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO vendors
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                vend_id,
+            <if test = "name != null">
+                vend_name,
+            </if>
+            <if test = "address != null">
+                vend_address,
+            </if>
+            <if test = "city != null">
+                vend_city,
+            </if>
+            <if test = "state != null">
+                vend_state,
+            </if>
+            <if test = "zip != null">
+                vend_zip,
+            </if>
+            <if test = "country != null">
+                vend_country,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                #{id},
+            <if test = "name != null">
+                #{name},
+            </if>
+            <if test = "address != null">
+                #{address},
+            </if>
+            <if test = "city != null">
+                #{city},
+            </if>
+            <if test = "state != null">
+                #{state},
+            </if>
+            <if test = "zip != null">
+                #{zip},
+            </if>
+            <if test = "country != null">
+                #{country},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="int">
+        UPDATE vendors
+        <set>
+            <if test = "name != null">
+                vend_name = #{name},
+            </if>
+            <if test = "address != null">
+                vend_address = #{address},
+            </if>
+            <if test = "city != null">
+                vend_city = #{city},
+            </if>
+            <if test = "state != null">
+                vend_state = #{state},
+            </if>
+            <if test = "zip != null">
+                vend_zip = #{zip},
+            </if>
+            <if test = "country != null">
+                vend_country = #{country},
+            </if>
+        </set>
+        WHERE vend_id = #{id}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="int">
+        DELETE FROM vendors WHERE vend_id = #{id}
+    </delete>
+
+    <select id="selectByPrimaryKey" resultMap="Vendor">
+        SELECT
+        <include refid="VendorColumn"/>
+        FROM vendors
+        WHERE vend_id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="Vendor">
+        SELECT
+        <include refid="VendorColumn"/>
+        FROM vendors
+        <where>
+            <include refid="QueryCond"/>
+        </where>
+        <if test = "page != null">
+            LIMIT #{page.size} OFFSET #{page.offset}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKeyWithProducts" resultMap="VendorWithProducts">
+        SELECT
+        <include refid="VendorWithProductsColumn"/>
+        FROM vendors v
+        LEFT JOIN products p
+        ON v.vend_id = p.vend_id
+        AND v.vid = #{id}
+    </select>
+
+    <select id="selectAllWithProducts" resultMap="VendorWithProducts">
+        SELECT
+        <include refid="VendorWithProductsColumn"/>
+        FROM vendors v
+        LEFT JOIN products p
+        ON v.vend_id = p.vend_id
+        <include refid="QueryCond"/>
+        <if test = "page != null">
+            LIMIT #{page.size} OFFSET #{page.offset}
+        </if>
+    </select>
+
+    <select id="countAll" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM vendors
+        <where>
+            <include refid="QueryCond"/>
+        </where>
+    </select>
+
+</mapper>
