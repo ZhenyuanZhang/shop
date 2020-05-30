@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.nj.zzy.common.aop.operationlog.OperationLogMapper">
+
+    <resultMap id="OperationLog" type="org.nj.zzy.common.aop.operationlog.OperationLogDO">
+        <id column="id" property="id"/>
+        <result column="meta_data" property="metaData"/>
+        <result column="business_type" property="businessType"/>
+        <result column="operation_type" property="operationType"/>
+        <result column="method" property="method"/>
+        <result column="args" property="args"/>
+        <result column="result" property="result"/>
+        <result column="error_msg" property="errorMsg"/>
+        <result column="operator" property="operator"/>
+        <result column="time_consuming" property="timeConsuming"/>
+        <result column="operator_time" property="operationTime"/>
+    </resultMap>
+
+    <insert id="insertOperationLog">
+        <selectKey keyProperty = "id" resultType = "int" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO operationlog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                id,
+            <if test="metaData != null">
+                meta_data,
+            </if>
+            <if test="businessType != null">
+                business_type,
+            </if>
+            <if test="operationType != null">
+                operation_type,
+            </if>
+            <if test="method != null">
+                method,
+            </if>
+            <if test="args != null">
+                args,
+            </if>
+            <if test="result != null">
+                result,
+            </if>
+            <if test="errorMsg != null">
+                error_msg,
+            </if>
+            <if test="operator != null">
+                operator,
+            </if>
+            <if test="timeConsuming != null">
+                time_consuming,
+            </if>
+            <if test="operationTime != null">
+                operator_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                #{id},
+            <if test="metaData != null">
+                #{metaData},
+            </if>
+            <if test="businessType != null">
+                #{businessType},
+            </if>
+            <if test="operationType != null">
+                #{operationType},
+            </if>
+            <if test="method != null">
+                #{method},
+            </if>
+            <if test="args != null">
+                #{args},
+            </if>
+            <if test="result != null">
+                #{result},
+            </if>
+            <if test="errorMsg != null">
+                #{errorMsg},
+            </if>
+            <if test="operator != null">
+                #{operator},
+            </if>
+            <if test="timeConsuming != null">
+                #{timeConsuming},
+            </if>
+            <if test="operationTime != null">
+                #{operationTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateOperationLog">
+        UPDATE operationlog
+        <set>
+            <if test="metaData != null">
+                meta_data=#{metaData},
+            </if>
+            <if test="businessType != null">
+                business_type=#{businessType},
+            </if>
+            <if test="operationType != null">
+                operation_type=#{operationType},
+            </if>
+            <if test="method != null">
+                method=#{method},
+            </if>
+            <if test="args != null">
+                args=#{args},
+            </if>
+            <if test="result != null">
+                result=#{result},
+            </if>
+            <if test="errorMsg != null">
+                error_msg=#{errorMsg},
+            </if>
+            <if test="operator != null">
+                operator=#{operator},
+            </if>
+            <if test="timeConsuming != null">
+                time_consuming=#{timeConsuming},
+            </if>
+            <if test="operationTime != null">
+                operation_time=#{operationTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteOperationLog">
+        DELETE FROM operationlog WHERE operation_time &lt;= #{data}
+    </delete>
+
+</mapper>

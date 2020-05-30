@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-@MapperScan(basePackages = "org.nj.zzy.product.dao")
+@MapperScan(basePackages = "org.nj.zzy")
 public class ZzyProductApplication implements WebMvcConfigurer {
     public static void main(String[] args) {
         SpringApplication. run(ZzyProductApplication.class, args);

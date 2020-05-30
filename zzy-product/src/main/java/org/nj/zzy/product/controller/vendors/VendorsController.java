@@ -1,9 +1,12 @@
 package org.nj.zzy.product.controller.vendors;
 
+import org.nj.zzy.common.aop.operationlog.OperationLog;
+import org.nj.zzy.common.domain.BusinessType;
+import org.nj.zzy.common.domain.GetListWrapper;
+import org.nj.zzy.common.domain.OperationType;
 import org.nj.zzy.common.http.ResponseBean;
 import org.nj.zzy.common.message.CommonErrorConstant;
 import org.nj.zzy.common.validate.util.CheckUtil;
-import org.nj.zzy.common.domain.GetListWrapper;
 import org.nj.zzy.product.domain.vendors.Vendor;
 import org.nj.zzy.product.domain.vendors.VendorQueryCond;
 import org.nj.zzy.product.service.VendorsServiceMysqlImpl;
@@ -30,6 +33,7 @@ public class VendorsController {
     }
 
     @PostMapping()
+    @OperationLog(businessType = BusinessType.VENDOR, operationType = OperationType.CREATE)
     public ResponseBean<?> insertVendors(@RequestBody Vendor vendor) {
         log.info("[VendorsController] create vendor: {}", vendor);
         CheckUtil.checkBadRequest(vendor.getId() != null, CommonErrorConstant.MUST_BE_EMPTY, "id");
@@ -38,6 +42,7 @@ public class VendorsController {
     }
 
     @PutMapping()
+    @OperationLog(businessType = BusinessType.VENDOR, operationType = OperationType.UPDATE)
     public ResponseBean<?> updateVendors(@RequestBody Vendor vendor) {
         log.info("[VendorsController] update vendor: {}", vendor);
         CheckUtil.checkBadRequest(vendor.getId() == null, CommonErrorConstant.CAN_NOT_BE_EMPTY, "id");
@@ -46,6 +51,7 @@ public class VendorsController {
     }
 
     @DeleteMapping("/{id}")
+    @OperationLog(businessType = BusinessType.VENDOR, operationType = OperationType.DELETE)
     public ResponseBean<?> deleteVendors(@PathVariable Integer id) {
         log.info("[VendorsController] delete vendor: {}", id);
         vendorsServiceMysqlImpl.delete(id);

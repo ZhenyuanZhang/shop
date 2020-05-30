@@ -52,17 +52,6 @@ public class VendorsServiceMysqlImpl {
         }
 
         if (withProducts) {
-            GetListWrapper<Vendor> getListWrapper = new GetListWrapper<>();
-            if (id != null) {
-                Vendor vendor = vendorsMapper.selectByPrimaryKey(id);
-                getListWrapper.setGetVoList(Lists.newArrayList(vendor));
-            } else {
-                List<Vendor> vendors = vendorsMapper.selectAll(vendorsQueryCond);
-                getListWrapper.setGetVoList(vendors);
-                getListWrapper.setPage(vendorsQueryCond.getPage());
-            }
-            return getListWrapper;
-        } else {
             GetListWrapper<VendorGetVo> getListWrapper = new GetListWrapper<>();
             if (id != null) {
                 VendorGetVo vendorGetVo = vendorsMapper.selectByPrimaryKeyWithProducts(id);
@@ -70,6 +59,17 @@ public class VendorsServiceMysqlImpl {
             } else {
                 List<VendorGetVo> vendorGetVos = vendorsMapper.selectAllWithProducts(vendorsQueryCond);
                 getListWrapper.setGetVoList(vendorGetVos);
+                getListWrapper.setPage(vendorsQueryCond.getPage());
+            }
+            return getListWrapper;
+        } else {
+            GetListWrapper<Vendor> getListWrapper = new GetListWrapper<>();
+            if (id != null) {
+                Vendor vendor = vendorsMapper.selectByPrimaryKey(id);
+                getListWrapper.setGetVoList(Lists.newArrayList(vendor));
+            } else {
+                List<Vendor> vendors = vendorsMapper.selectAll(vendorsQueryCond);
+                getListWrapper.setGetVoList(vendors);
                 getListWrapper.setPage(vendorsQueryCond.getPage());
             }
             return getListWrapper;

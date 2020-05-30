@@ -4,7 +4,7 @@ server:
     context-path: /nj/zzy
 
 mybatis:
-  mapper-locations: classpath:mapper/**/*Mapper.xml
+  mapper-locations: classpath*:mybatis/**/*Mapper.xml
 
 spring:
   # 数据库连接信息  DB Configuration:

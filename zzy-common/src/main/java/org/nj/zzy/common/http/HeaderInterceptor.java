@@ -15,11 +15,10 @@ public class HeaderInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String language = request.getHeader("Accept-Language");
-        System.out.println("HeaderInterceptor: " + Thread.currentThread().getName());
         Context context = ThreadLocalUtil.getContext();
-        System.out.println("HeaderInterceptor: 1" + ThreadLocalUtil.getContext());
-        context.setLocale("en-US".equalsIgnoreCase(language) ? Locale.US : Locale.SIMPLIFIED_CHINESE);
-        System.out.println("HeaderInterceptor: 2" + ThreadLocalUtil.getContext());
+        Locale locale = "en-US".equalsIgnoreCase(language) ? Locale.US : Locale.SIMPLIFIED_CHINESE;
+        log.info("Accept-Language: {}", locale);
+        context.setLocale(locale);
         return true;
     }
 

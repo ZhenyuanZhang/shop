@@ -22,7 +22,7 @@
         <result column="vend_zip" property="zip"/>
         <result column="vend_country" property="country"/>
         <collection property="productList" ofType="org.nj.zzy.product.domain.products.Product">
-            <id column="prod_id" property="id"/>
+            <id column="prod_id" property="uuid"/>
             <result column="prod_name" property="name"/>
             <result column="prod_price" property="price"/>
             <result column="prod_desc" property="desc"/>
@@ -34,7 +34,7 @@
     </sql>
 
     <sql id="VendorWithProductsColumn">
-        v.vend_id, v.vend_name, v.vend_address, v.vend_city, v.vend_state, v.vend_zip, v.vend_country, p.prod_id, p.prod_name, p.prod_price, p.prod_desc'
+        v.vend_id, v.vend_name, v.vend_address, v.vend_city, v.vend_state, v.vend_zip, v.vend_country, p.prod_id, p.prod_name, p.prod_price, p.prod_desc
     </sql>
 
     <sql id="QueryCond">
@@ -142,7 +142,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="int">
+    <update id="updateByPrimaryKeySelective">
         UPDATE vendors
         <set>
             <if test = "name != null">
@@ -196,7 +196,7 @@
         FROM vendors v
         LEFT JOIN products p
         ON v.vend_id = p.vend_id
-        AND v.vid = #{id}
+        AND v.vend_id = #{id}
     </select>
 
     <select id="selectAllWithProducts" resultMap="VendorWithProducts">

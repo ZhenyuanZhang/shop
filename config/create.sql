@@ -62,8 +62,7 @@ CREATE TABLE IF NOT EXISTS orders
   order_num  int      NOT NULL AUTO_INCREMENT COMMENT '订单ID',
   order_date datetime NOT NULL COMMENT '订单日期',
   cust_id    int      NOT NULL COMMENT '顾客ID',
-  PRIMARY KEY (order_num),
-  CONSTRAINT fk_orders_customers FOREIGN KEY (cust_id) REFERENCES customers (cust_id)
+  PRIMARY KEY (order_num)
 ) ENGINE=InnoDB;
 
 #########################
@@ -75,12 +74,30 @@ CREATE TABLE IF NOT EXISTS orderitems
   order_item int          NOT NULL COMMENT '该物品在订单中的排序号',
   prod_id    varchar(36)  NOT NULL COMMENT '产品ID',
   quantity   int          NOT NULL COMMENT '数量',
-  PRIMARY KEY (order_num, order_item),
-  CONSTRAINT fk_orderitems_orders FOREIGN KEY (order_num) REFERENCES orders (order_num)
+  item_price decimal(8,2) NOT NULL COMMENT '商品价格',
+  PRIMARY KEY (order_num, order_item)
 ) ENGINE=InnoDB;
 
-#####################
-# Define foreign keys
-#####################
-ALTER TABLE orderitems ADD CONSTRAINT fk_orderitems_products FOREIGN KEY (prod_id) REFERENCES products (prod_id);
-ALTER TABLE products ADD CONSTRAINT fk_products_vendors FOREIGN KEY (vend_id) REFERENCES vendors (vend_id);
+DROP TABLE IF EXISTS operationlog;
+#########################
+# Create operationlog table
+#########################
+CREATE TABLE IF NOT EXISTS operationlog
+(
+  id             int          NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  meta_data      varchar(200) NOT NULL COMMENT '节点信息',
+  business_type  varchar(50)  NULL COMMENT '资源类型',
+  operation_type varchar(50)  NULL COMMENT '资源类型',
+  args           TEXT         NULL DEFAULT NULL COMMENT '方法入参',
+  `result`       varchar(100) NULL DEFAULT NULL COMMENT '方法结果',
+  error_msg      TEXT         NULL DEFAULT NULL COMMENT '方法异常',
+  `operator`     varchar(12)  NOT NULL COMMENT '请求调用者',
+  time_consuming int          NULL DEFAULT 0 COMMENT '业务调用耗时',
+  operator_time  timestamp    NOT NULL default CURRENT_TIMESTAMP, 
+  PRIMARY KEY (id)
+) ENGINE=InnoDB;
+
+
+
+
+
