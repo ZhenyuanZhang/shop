@@ -1,0 +1,368 @@
+{
+	"info": {
+		"_postman_id": "12ba349f-3b5e-4ee9-a947-17cf3dc6e3fe",
+		"name": "Product",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Vendors",
+			"item": [
+				{
+					"name": "CreateVendor",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"华为\",\n    \"address\":\"软件大道\",\n    \"city\":\"南京\",\n    \"state\":\"江苏\",\n    \"country\":\"中国\",\n    \"zip\":\"610001\"\n}"
+						},
+						"url": {
+							"raw": "{{product}}/vendors/vendor",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"vendors",
+								"vendor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateVendor",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1007,\n    \"name\": \"华为\",\n    \"address\": \"雨花台\",\n    \"city\": \"南京\",\n    \"state\": \"江苏\",\n    \"zip\": \"621001\",\n    \"country\": null\n}"
+						},
+						"url": {
+							"raw": "{{product}}/vendors/vendor",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"vendors",
+								"vendor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteVendor",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"\",\n    \"name\":\"\",\n    \"address\":\"\",\n    \"city\":\"\",\n    \"state\":\"\",\n    \"country\":\"\",\n    \"zip\":\"\"\n}"
+						},
+						"url": {
+							"raw": "{{product}}/vendors/vendor/1006",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"vendors",
+								"vendor",
+								"1006"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetVendor",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{product}}/vendors/vendor?withProducts=true&page.index=1&page.size=10",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"vendors",
+								"vendor"
+							],
+							"query": [
+								{
+									"key": "withProducts",
+									"value": "true"
+								},
+								{
+									"key": "page.index",
+									"value": "1"
+								},
+								{
+									"key": "page.size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "CreateProduct",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"荣耀V20\",\n    \"price\": 2690.00,\n    \"desc\": \"经济实惠好手机\",\n    \"vendorId\": 1007\n}"
+						},
+						"url": {
+							"raw": "{{product}}/products/product",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"products",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateProduct",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uuid\": \"32f8a9da-a32b-11ea-8089-000ec6ce9783\",\n    \"name\": \"荣耀V20\",\n    \"price\": 2569.00,\n    \"desc\": \"经济实惠好手机，近期减价处理\",\n    \"vendorId\": 1007\n}"
+						},
+						"url": {
+							"raw": "{{product}}/products/product",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"products",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteProduct",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"\",\n    \"name\":\"\",\n    \"address\":\"\",\n    \"city\":\"\",\n    \"state\":\"\",\n    \"country\":\"\",\n    \"zip\":\"\"\n}"
+						},
+						"url": {
+							"raw": "{{product}}/products/product/32f8a9da-a32b-11ea-8089-000ec6ce9783",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"products",
+								"product",
+								"32f8a9da-a32b-11ea-8089-000ec6ce9783"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetProduct",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{product}}/products/product?minPrice=5&withVendor=true&page.index=1&page.size=5&maxPrice=10",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"products",
+								"product"
+							],
+							"query": [
+								{
+									"key": "minPrice",
+									"value": "5"
+								},
+								{
+									"key": "withVendor",
+									"value": "true"
+								},
+								{
+									"key": "page.index",
+									"value": "1"
+								},
+								{
+									"key": "page.size",
+									"value": "5"
+								},
+								{
+									"key": "maxPrice",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "7bf18562-8812-4215-90e1-111506ddb3d7",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "98abcc04-bd8a-4274-a076-cf94286e414f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

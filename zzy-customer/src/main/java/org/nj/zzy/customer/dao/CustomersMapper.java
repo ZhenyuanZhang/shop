@@ -7,6 +7,10 @@ import org.apache.ibatis.annotations.Param;
 import org.nj.zzy.customer.domain.customers.Customer;
 import org.nj.zzy.customer.domain.customers.CustomerQueryCond;
 
+/**
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 @Mapper
 public interface CustomersMapper {
     int insertSelective(Customer product);

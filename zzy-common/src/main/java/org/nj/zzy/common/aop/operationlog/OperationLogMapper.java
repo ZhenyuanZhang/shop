@@ -4,6 +4,10 @@ import java.util.Date;
 
 import org.apache.ibatis.annotations.Mapper;
 
+/**
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 @Mapper
 public interface OperationLogMapper {
 

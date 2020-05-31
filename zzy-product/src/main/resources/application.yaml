@@ -5,6 +5,8 @@ server:
 
 mybatis:
   mapper-locations: classpath*:mybatis/**/*Mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 spring:
   # 数据库连接信息  DB Configuration:

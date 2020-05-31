@@ -2,6 +2,10 @@ package org.nj.zzy.common.http;
 
 import lombok.Data;
 
+/**
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 @Data
 public class ResponseBean<T> {
     private int code;

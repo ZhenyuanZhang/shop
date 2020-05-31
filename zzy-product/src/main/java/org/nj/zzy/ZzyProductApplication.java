@@ -6,6 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 @EnableDiscoveryClient
 @SpringBootApplication
 @MapperScan(basePackages = "org.nj.zzy")

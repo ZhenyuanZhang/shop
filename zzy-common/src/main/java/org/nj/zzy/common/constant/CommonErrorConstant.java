@@ -1,5 +1,9 @@
-package org.nj.zzy.common.message;
+package org.nj.zzy.common.constant;
 
+/**
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 public interface CommonErrorConstant {
 
     String PREPIX = "common.";

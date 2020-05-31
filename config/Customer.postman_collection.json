@@ -1,0 +1,200 @@
+{
+	"info": {
+		"_postman_id": "4b31c665-7e97-4168-b69f-c373843eefec",
+		"name": "Customer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "CreateCustomer",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"张真源手机回收中心.\",\r\n    \"address\": \"修文路9号保利梧桐语\",\r\n    \"city\": \"南京\",\r\n    \"state\": \"江苏\",\r\n    \"zip\": \"621001\",\r\n    \"country\": \"中国\",\r\n    \"contact\": \"张真源\",\r\n    \"email\": \"13222071658@163.com\"\r\n}"
+						},
+						"url": {
+							"raw": "{{customer}}/customers/customer",
+							"host": [
+								"{{customer}}"
+							],
+							"path": [
+								"customers",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateCustomer",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 10006,\r\n    \"name\": \"张真源手机市场\",\r\n    \"address\": \"东山镇尚悦花园\",\r\n    \"city\": \"南京\",\r\n    \"state\": \"江苏\",\r\n    \"zip\": \"621001\",\r\n    \"country\": \"中国\",\r\n    \"contact\": \"张真源\",\r\n    \"email\": \"13222071658@163.com\"\r\n}"
+						},
+						"url": {
+							"raw": "{{customer}}/customers/customer",
+							"host": [
+								"{{customer}}"
+							],
+							"path": [
+								"customers",
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteCustomer",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "{{language}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{customer}}/customers/customer/10006",
+							"host": [
+								"{{customer}}"
+							],
+							"path": [
+								"customers",
+								"customer",
+								"10006"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCustomer",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"type": "text",
+								"value": "{{language}}"
+							}
+						],
+						"url": {
+							"raw": "{{customer}}/customers/customer?page.index=1&page.size=10&name=张真源&nameFuzzyQuery=true",
+							"host": [
+								"{{customer}}"
+							],
+							"path": [
+								"customers",
+								"customer"
+							],
+							"query": [
+								{
+									"key": "page.index",
+									"value": "1"
+								},
+								{
+									"key": "page.size",
+									"value": "10"
+								},
+								{
+									"key": "name",
+									"value": "张真源"
+								},
+								{
+									"key": "nameFuzzyQuery",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "511388cc-5af0-4c44-b0a7-b29a8f152590",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "645d5f46-e533-49ce-829a-1f60b12bf715",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

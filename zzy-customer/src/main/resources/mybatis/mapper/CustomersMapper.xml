@@ -3,7 +3,7 @@
 
 <mapper namespace="org.nj.zzy.customer.dao.CustomersMapper">
 
-    <resultMap id="Customer" type="org.nj.zzy.customer.domain.customers">
+    <resultMap id="Customer" type="org.nj.zzy.customer.domain.customers.Customer">
         <id column="cust_id" property="id"/>
         <result column="cust_name" property="name"/>
         <result column="cust_address" property="address"/>
@@ -20,6 +20,7 @@
     </sql>
 
     <sql id="QueryCond">
+        <where>
         <if test="name != null" >
             <choose>
                 <when test="nameFuzzyQuery">
@@ -73,6 +74,7 @@
         <if test="zip != null">
             AND cust_zip = #{zip}
         </if>
+        </where>
     </sql>
 
     <insert id="insertSelective">
@@ -182,9 +184,7 @@
         SELECT
         <include refid="CustomerColumn"/>
         FROM customers
-        <where>
-            <include refid="QueryCond"/>
-        </where>
+        <include refid="QueryCond"/>
         <if test = "page != null">
             LIMIT #{page.size} OFFSET #{page.offset}
         </if>
@@ -192,9 +192,7 @@
 
     <select id="countAll" resultType="java.lang.Long">
         SELECT COUNT(cust_id) FROM customers
-        <where>
-            <include refid="QueryCond"/>
-        </where>
+        <include refid="QueryCond"/>
     </select>
 
 </mapper>

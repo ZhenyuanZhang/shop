@@ -3,7 +3,6 @@ package org.nj.zzy.common.aop.operationlog;
 import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +22,10 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 
+/**
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 @Aspect
 @Component
 public class OperationAspect {
@@ -34,32 +37,29 @@ public class OperationAspect {
 
     private static final String PARAM_JSON = "paramJson";
 
-    //表示匹配带有自定义注解的方法
+    // 表示匹配带有自定义注解的方法
     @Pointcut("@annotation(org.nj.zzy.common.aop.operationlog.OperationLog)")
-    public void operationalLog() {
-    }
+    public void operationalLog() {}
 
     @Before("operationalLog()")
-    public void doBefore(JoinPoint joinPoint) {
-    }
+    public void doBefore(JoinPoint joinPoint) {}
 
     @Around("operationalLog()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
 
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
         OperationLog annotation = methodSignature.getMethod().getAnnotation(OperationLog.class);
-
-        List<Map<String, String>> params = null;
-        if (annotation.saveArgs()) {
-            params = Arrays.stream(joinPoint.getArgs()).map(OperationAspect::getObjectJson).collect(Collectors.toList());
-        }
+        Object[] args = joinPoint.getArgs();
 
         OperationLogDO operationLogDO = new OperationLogDO();
         operationLogDO.setMetaData(InetAddress.getLocalHost().getHostAddress());
         operationLogDO.setBusinessType(annotation.businessType().name());
         operationLogDO.setOperationType(annotation.operationType().name());
-        operationLogDO.setArgs(Optional.ofNullable(params).map(JSON::toJSONString).orElse(null));
+        if (annotation.saveArgs() && args != null && args.length > 0) {
+            operationLogDO.setArgs(JSON
+                .toJSONString((Arrays.stream(args).map(OperationAspect::getObjectJson).collect(Collectors.toList()))));
+        }
         operationLogDO.setOperator(Optional.ofNullable(ThreadLocalUtil.getContext().getUser()).orElse("NA"));
         operationLogDO.setOperationTime(new Date());
 
@@ -68,7 +68,7 @@ public class OperationAspect {
             if (result instanceof ResponseBean) {
                 operationLogDO.setResult(JSON.toJSONString(result));
             }
-            operationLogDO.setTimeConsuming((int) (System.currentTimeMillis() - start));
+            operationLogDO.setTimeConsuming((int)(System.currentTimeMillis() - start));
             operationLogMapper.insertOperationLog(operationLogDO);
             return result;
         } catch (RuntimeException e) {

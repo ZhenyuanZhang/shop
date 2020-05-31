@@ -9,14 +9,14 @@ public class BaseException extends RuntimeException {
 
     private int code;
 
-    private String message;
+    private String errorMsg;
 
     private Object[] params;
 
     public BaseException(int code, String message, Object... params) {
         super(message);
         this.code = code;
-        this.message = message;
+        this.errorMsg = message;
         this.params = params;
     }
 }

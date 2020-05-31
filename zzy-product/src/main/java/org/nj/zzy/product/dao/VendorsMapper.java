@@ -8,6 +8,10 @@ import org.nj.zzy.product.domain.vendors.Vendor;
 import org.nj.zzy.product.domain.vendors.VendorGetVo;
 import org.nj.zzy.product.domain.vendors.VendorQueryCond;
 
+/**
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 @Mapper
 public interface VendorsMapper {
     int insertSelective(Vendor vendor);

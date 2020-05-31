@@ -4,18 +4,14 @@
 <mapper namespace="org.nj.zzy.product.dao.ProductsMapper">
 
     <resultMap id="Product" type="org.nj.zzy.product.domain.products.Product">
-        <id column="prod_id" property="id"/>
+        <id column="prod_id" property="uuid"/>
         <result column="prod_name" property="name"/>
         <result column="prod_price" property="price"/>
         <result column="prod_desc" property="desc"/>
         <result column="vend_id" property="vendorId"/>
     </resultMap>
 
-    <resultMap id="ProductWithVendor" type="org.nj.zzy.product.domain.products.ProductGetVo">
-        <id column="prod_id" property="id"/>
-        <result column="prod_name" property="name"/>
-        <result column="prod_price" property="price"/>
-        <result column="prod_desc" property="desc"/>
+    <resultMap id="ProductWithVendor" type="org.nj.zzy.product.domain.products.ProductGetVo" extends="Product">
         <association property="vendor" javaType="org.nj.zzy.product.domain.vendors.Vendor">
             <id column="vend_id" property="id"/>
             <result column="vend_name" property="name"/>
@@ -33,40 +29,45 @@
     </sql>
 
     <sql id="ProductWithVendorColumn">
-        p.prod_id, p.prod_name, p.prod_price, p.desc, v.vend_id, v.vend_name, v.vend_address, v.vend_city, v.vend_state, v.vend_zip, v.vend_country
+        p.prod_id, p.prod_name, p.prod_price, p.prod_desc, v.vend_id, v.vend_name, v.vend_address, v.vend_city, v.vend_state, v.vend_zip, v.vend_country
     </sql>
 
     <sql id="QueryCond">
+        <where>
         <if test="name != null" >
             <choose>
                 <when test="nameFuzzyQuery">
-                    AND prod_name LIKE concat(#{name}, '%')
+                    AND p.prod_name LIKE concat(#{name}, '%')
                 </when>
                 <otherwise>
-                    AND prod_name = #{name}
+                    AND p.prod_name = #{name}
                 </otherwise>
             </choose>
         </if>
         <if test="desc != null" >
             <choose>
                 <when test="descFuzzyQuery">
-                    AND prod_desc LIKE concat(#{desc}, '%')
+                    AND p.prod_desc LIKE concat(#{desc}, '%')
                 </when>
                 <otherwise>
-                    AND prod_desc = #{desc}
+                    AND p.prod_desc = #{desc}
                 </otherwise>
             </choose>
         </if>
         <if test="maxPrice != null">
-            AND prod_price &lt;= #{maxPrice}
+            AND p.prod_price &lt;= #{maxPrice}
         </if>
         <if test="minPrice != null">
-            AND prod_price &gt;= #{minPrice}
+            AND p.prod_price &gt;= #{minPrice}
         </if>
+        <if test="vendorId != null">
+            AND p.vend_id = #{vendorId}
+        </if>
+        </where>
     </sql>
 
     <insert id="insertSelective">
-        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+        <selectKey keyProperty="uuid" resultType="java.lang.String" order="BEFORE">
             SELECT uuid()
         </selectKey>
         INSERT INTO products
@@ -86,15 +87,15 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                #{id},
+                #{uuid},
             <if test="name != null">
                 #{name},
             </if>
             <if test="price != null">
-                #{address},
+                #{price},
             </if>
             <if test="desc != null">
-                #{city},
+                #{desc},
             </if>
             <if test="vendorId != null">
                 #{vendorId},
@@ -106,42 +107,53 @@
         UPDATE products
         <set>
             <if test="name != null">
-                #{name},
+                prod_name = #{name},
             </if>
             <if test="price != null">
-                #{address},
+                prod_price = #{price},
             </if>
             <if test="desc != null">
-                #{city},
+                prod_desc = #{desc},
             </if>
             <if test="vendorId != null">
-                #{vendorId},
+                vend_id = #{vendorId},
             </if>
         </set>
-        WHERE prod_id = #{id}
+        WHERE prod_id = #{uuid}
     </update>
 
     <delete id="deleteByPrimaryKey">
-        DELETE FROM products WHERE prod_id = #{id}
+        DELETE FROM products WHERE prod_id = #{uuid}
     </delete>
 
     <select id="selectByPrimaryKey" resultMap="Product">
         SELECT
         <include refid="ProductColumn"/>
         FROM products
-        WHERE prod_id = #{id}
+        WHERE prod_id = #{uuid}
     </select>
 
     <select id="selectAll" resultMap="Product">
         SELECT
         <include refid="ProductColumn"/>
-        FROM products
-        <where>
-            <include refid="QueryCond"/>
-        </where>
-        <if test = "page != null">
-            LIMIT #{page.size} OFFSET #{page.offset}
+        FROM products p
+        <include refid="QueryCond"/>
+        <if test = "page != null and page.size != null">
+            LIMIT #{page.size}
+            <if test = "page.offset != null">
+                OFFSET #{page.offset}
+            </if>
         </if>
+    </select>
+
+    <select id="selectByVendorIdList" resultMap="Product">
+        SELECT
+        <include refid="ProductColumn"/>
+        FROM products
+        WHERE
+        <foreach collection="vendorIdList" item="vendorId" separator="," open="vend_id in(" close=")">
+            #{vendorId}
+        </foreach>
     </select>
 
     <select id="selectByPrimaryKeyWithVendor" resultMap="ProductWithVendor">
@@ -150,29 +162,27 @@
         FROM products p
         LEFT JOIN vendors v
         ON p.vend_id = v.vend_id
-        AND p.pid = {id}
-        <if test = "page != null">
-            LIMIT #{page.size} OFFSET #{page.offset}
-        </if>
+        WHERE p.prod_id = {uuid}
     </select>
 
-    <select id="selectAllWithVendor" resultMap="ProductWithVendor">
+    <select id="selectAllWithVendors" resultMap="ProductWithVendor">
         SELECT
         <include refid = "ProductWithVendorColumn"/>
         FROM products p
         LEFT JOIN vendors v
         ON p.vend_id = v.vend_id
         <include refid="QueryCond"/>
-        <if test = "page != null">
-            LIMIT #{page.size} OFFSET #{page.offset}
+        <if test = "page != null and page.size != null">
+            LIMIT #{page.size}
+            <if test = "page.offset != null">
+                OFFSET #{page.offset}
+            </if>
         </if>
     </select>
 
     <select id="countAll" resultType="java.lang.Long">
         SELECT COUNT(*)
-        FROM products
-        <where>
-            <include refid="QueryCond"/>
-        </where>
+        FROM products p
+        <include refid="QueryCond"/>
     </select>
 </mapper>

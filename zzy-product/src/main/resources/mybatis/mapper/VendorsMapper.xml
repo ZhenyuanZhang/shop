@@ -38,59 +38,61 @@
     </sql>
 
     <sql id="QueryCond">
+        <where>
         <if test="name != null" >
             <choose>
                 <when test="nameFuzzyQuery">
-                    AND vend_name LIKE concat(#{name}, '%')
+                    AND v.vend_name LIKE concat(#{name}, '%')
                 </when>
                 <otherwise>
-                    AND vend_name = #{name}
+                    AND v.vend_name = #{name}
                 </otherwise>
             </choose>
         </if>
         <if test="address != null" >
             <choose>
                 <when test="addressFuzzyQuery">
-                    AND vend_address LIKE concat(#{address}, '%')
+                    AND v.vend_address LIKE concat(#{address}, '%')
                 </when>
                 <otherwise>
-                    AND vend_address = #{address}
+                    AND v.vend_address = #{address}
                 </otherwise>
             </choose>
         </if>
         <if test="city != null" >
             <choose>
                 <when test="cityFuzzyQuery">
-                    AND vend_city LIKE concat(#{city}, '%')
+                    AND v.vend_city LIKE concat(#{city}, '%')
                 </when>
                 <otherwise>
-                    AND vend_city = #{city}
+                    AND v.vend_city = #{city}
                 </otherwise>
             </choose>
         </if>
         <if test="state != null" >
             <choose>
                 <when test="stateFuzzyQuery">
-                    AND vend_state LIKE concat(#{state}, '%')
+                    AND v.vend_state LIKE concat(#{state}, '%')
                 </when>
                 <otherwise>
-                    AND vend_state = #{state}
+                    AND v.vend_state = #{state}
                 </otherwise>
             </choose>
         </if>
         <if test="country != null" >
             <choose>
                 <when test="countryFuzzyQuery">
-                    AND vend_country LIKE concat(#{country}, '%')
+                    AND v.vend_country LIKE concat(#{country}, '%')
                 </when>
                 <otherwise>
-                    AND vend_country = #{country}
+                    AND v.vend_country = #{country}
                 </otherwise>
             </choose>
         </if>
         <if test="zip != null">
-            AND vend_zip = #{zip}
+            AND v.vend_zip = #{zip}
         </if>
+        </where>
     </sql>
 
     <insert id="insertSelective">
@@ -181,12 +183,13 @@
     <select id="selectAll" resultMap="Vendor">
         SELECT
         <include refid="VendorColumn"/>
-        FROM vendors
-        <where>
-            <include refid="QueryCond"/>
-        </where>
-        <if test = "page != null">
-            LIMIT #{page.size} OFFSET #{page.offset}
+        FROM vendors v
+        <include refid="QueryCond"/>
+        <if test = "page != null and page.size != null">
+            LIMIT #{page.size}
+            <if test = "page.offset != null">
+                OFFSET #{page.offset}
+            </if>
         </if>
     </select>
 
@@ -196,26 +199,25 @@
         FROM vendors v
         LEFT JOIN products p
         ON v.vend_id = p.vend_id
-        AND v.vend_id = #{id}
+        WHERE v.vend_id = #{id}
     </select>
 
     <select id="selectAllWithProducts" resultMap="VendorWithProducts">
         SELECT
-        <include refid="VendorWithProductsColumn"/>
+        <include refid="VendorColumn"/>
         FROM vendors v
-        LEFT JOIN products p
-        ON v.vend_id = p.vend_id
         <include refid="QueryCond"/>
-        <if test = "page != null">
-            LIMIT #{page.size} OFFSET #{page.offset}
+        <if test = "page != null and page.size != null">
+            LIMIT #{page.size}
+            <if test = "page.offset != null">
+                OFFSET #{page.offset}
+            </if>
         </if>
     </select>
 
     <select id="countAll" resultType="java.lang.Long">
-        SELECT COUNT(*) FROM vendors
-        <where>
-            <include refid="QueryCond"/>
-        </where>
+        SELECT COUNT(*) FROM vendors v
+        <include refid="QueryCond"/>
     </select>
 
 </mapper>

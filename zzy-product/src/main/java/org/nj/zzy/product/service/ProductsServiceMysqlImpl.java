@@ -1,5 +1,6 @@
 package org.nj.zzy.product.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.nj.zzy.common.validate.util.CheckUtil;
@@ -14,6 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
+/**
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 @Service
 public class ProductsServiceMysqlImpl {
 
@@ -24,53 +29,74 @@ public class ProductsServiceMysqlImpl {
         this.productsMapper = productsMapper;
     }
 
+    /**
+     * 创建产品业务实现
+     *
+     * @param product 产品业务模型
+     */
     @Transactional
     public void create(Product product) {
         int isSuccess = productsMapper.insertSelective(product);
         CheckUtil.checkBusinessException(isSuccess != 1, "create product failed");
     }
 
+    /**
+     * 更新产品业务实现
+     *
+     * @param product 产品业务模型
+     */
     @Transactional
     public void update(Product product) {
         int isSuccess = productsMapper.updateByPrimaryKeySelective(product);
         CheckUtil.checkBusinessException(isSuccess != 1, "update product failed");
     }
 
+    /**
+     * 删除产品业务实现
+     *
+     * @param uuid 产品业务标识
+     */
     @Transactional
-    public void delete(String id) {
-        int isSuccess = productsMapper.deleteByPrimaryKey(id);
+    public void delete(String uuid) {
+        int isSuccess = productsMapper.deleteByPrimaryKey(uuid);
         CheckUtil.checkBusinessException(isSuccess != 1, "delete product failed");
     }
 
-    public GetListWrapper<?> selectAll(ProductQueryCond vendorsQueryCond) {
-        Boolean withVendor = vendorsQueryCond.getWithVendor();
-        String id = vendorsQueryCond.getUuid();
+    /**
+     * 查询产品业务实现
+     *
+     * @param productQueryCond 产品业务查询条件
+     * @return GetListWrapper 产品业务数据、分页数据
+     */
+    public GetListWrapper<?> selectAll(ProductQueryCond productQueryCond) {
+        Boolean withVendor = productQueryCond.getWithVendor();
+        String id = productQueryCond.getUuid();
 
-        if (id != null) {
-            long count = productsMapper.countAll(vendorsQueryCond);
-            vendorsQueryCond.getPage().setCount(count);
+        if (id == null) {
+            long count = productsMapper.countAll(productQueryCond);
+            productQueryCond.getPage().setCount(count);
         }
 
         if (withVendor) {
-            GetListWrapper<Product> getListWrapper = new GetListWrapper<>();
+            GetListWrapper<ProductGetVo> getListWrapper = new GetListWrapper<>();
             if (id != null) {
-                Product product = productsMapper.selectByPrimaryKey(id);
-                getListWrapper.setGetVoList(Lists.newArrayList(product));
+                ProductGetVo productGetVo = productsMapper.selectByPrimaryKeyWithVendors(id);
+                getListWrapper.setGetVoList(Collections.singletonList(productGetVo));
             } else {
-                List<Product> vendors = productsMapper.selectAll(vendorsQueryCond);
-                getListWrapper.setGetVoList(vendors);
-                getListWrapper.setPage(vendorsQueryCond.getPage());
+                List<ProductGetVo> productGetVos = productsMapper.selectAllWithVendors(productQueryCond);
+                getListWrapper.setGetVoList(productGetVos);
+                getListWrapper.setPage(productQueryCond.getPage());
             }
             return getListWrapper;
         } else {
-            GetListWrapper<ProductGetVo> getListWrapper = new GetListWrapper<>();
+            GetListWrapper<Product> getListWrapper = new GetListWrapper<>();
             if (id != null) {
-                ProductGetVo productGetVo = productsMapper.selectByPrimaryKeyWithProducts(id);
-                getListWrapper.setGetVoList(Lists.newArrayList(productGetVo));
+                Product product = productsMapper.selectByPrimaryKey(id);
+                getListWrapper.setGetVoList(Collections.singletonList(product));
             } else {
-                List<ProductGetVo> productGetVos = productsMapper.selectAllWithProducts(vendorsQueryCond);
-                getListWrapper.setGetVoList(productGetVos);
-                getListWrapper.setPage(vendorsQueryCond.getPage());
+                List<Product> vendors = productsMapper.selectAll(productQueryCond);
+                getListWrapper.setGetVoList(vendors);
+                getListWrapper.setPage(productQueryCond.getPage());
             }
             return getListWrapper;
         }

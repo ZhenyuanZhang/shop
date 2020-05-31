@@ -9,6 +9,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 处理Http请求Headers参数中的信息
+ *
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 @Slf4j
 public class HeaderInterceptor implements HandlerInterceptor {
 

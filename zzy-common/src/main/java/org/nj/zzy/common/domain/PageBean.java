@@ -2,6 +2,12 @@ package org.nj.zzy.common.domain;
 
 import java.util.Optional;
 
+/**
+ * 分页信息模型
+ *
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 public class PageBean {
     private static final Integer PAGE_SIZE = 30000;
 
@@ -36,6 +42,9 @@ public class PageBean {
     }
 
     public Integer getOffset() {
-        return size * (index - 1);
+        if (size != null && index != null) {
+            return size * (index - 1);
+        }
+        return null;
     }
 }

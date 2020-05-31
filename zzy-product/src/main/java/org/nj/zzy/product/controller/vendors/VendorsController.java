@@ -1,11 +1,11 @@
 package org.nj.zzy.product.controller.vendors;
 
 import org.nj.zzy.common.aop.operationlog.OperationLog;
-import org.nj.zzy.common.domain.BusinessType;
+import org.nj.zzy.common.constant.BusinessType;
 import org.nj.zzy.common.domain.GetListWrapper;
-import org.nj.zzy.common.domain.OperationType;
+import org.nj.zzy.common.constant.OperationType;
 import org.nj.zzy.common.http.ResponseBean;
-import org.nj.zzy.common.message.CommonErrorConstant;
+import org.nj.zzy.common.constant.CommonErrorConstant;
 import org.nj.zzy.common.validate.util.CheckUtil;
 import org.nj.zzy.product.domain.vendors.Vendor;
 import org.nj.zzy.product.domain.vendors.VendorQueryCond;
@@ -22,6 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 @RestController
 @RequestMapping("/vendors/vendor")
 @Slf4j
@@ -32,6 +36,13 @@ public class VendorsController {
         this.vendorsServiceMysqlImpl = vendorsServiceMysqlImpl;
     }
 
+    /**
+     * 创建Vendor接口
+     *
+     * @param vendor 供应商业务模型
+     * @return ResponseBean
+     * @see org.nj.zzy.common.aop.operationlog.OperationAspect 记录本次接口调用的操作日志
+     */
     @PostMapping()
     @OperationLog(businessType = BusinessType.VENDOR, operationType = OperationType.CREATE)
     public ResponseBean<?> insertVendors(@RequestBody Vendor vendor) {
@@ -41,6 +52,13 @@ public class VendorsController {
         return ResponseBean.getOK();
     }
 
+    /**
+     * 更新Vendor接口
+     *
+     * @param vendor 供应商业务模型
+     * @return ResponseBean
+     * @see org.nj.zzy.common.aop.operationlog.OperationAspect 记录本次接口调用的操作日志
+     */
     @PutMapping()
     @OperationLog(businessType = BusinessType.VENDOR, operationType = OperationType.UPDATE)
     public ResponseBean<?> updateVendors(@RequestBody Vendor vendor) {
@@ -50,6 +68,13 @@ public class VendorsController {
         return ResponseBean.getOK();
     }
 
+    /**
+     * 删除Vendor接口
+     *
+     * @param id 供应商业务标记
+     * @return ResponseBean
+     * @see org.nj.zzy.common.aop.operationlog.OperationAspect 记录本次接口调用的操作日志
+     */
     @DeleteMapping("/{id}")
     @OperationLog(businessType = BusinessType.VENDOR, operationType = OperationType.DELETE)
     public ResponseBean<?> deleteVendors(@PathVariable Integer id) {
@@ -58,6 +83,12 @@ public class VendorsController {
         return ResponseBean.getOK();
     }
 
+    /**
+     * 插叙对应条件的Vendor接口
+     *
+     * @param queryCond 供应商业务标记
+     * @return GetListWrapper 业务数据、分页信息
+     */
     @GetMapping()
     public ResponseBean<GetListWrapper<?>> selectVendors(VendorQueryCond queryCond) {
         log.info("[VendorsController] get vendor: {}", queryCond);

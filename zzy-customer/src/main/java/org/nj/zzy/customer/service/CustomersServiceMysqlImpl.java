@@ -13,6 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
+/**
+ * @author Zhenyuan Zhang
+ * @time 2020-05-31 10:00
+ */
 @Service
 public class CustomersServiceMysqlImpl {
 
@@ -23,18 +27,33 @@ public class CustomersServiceMysqlImpl {
         this.customersMapper = customersMapper;
     }
 
+    /**
+     * 创建顾客信息业务实现
+     *
+     * @param customer 顾客信息业务模型
+     */
     @Transactional
     public void create(Customer customer) {
         int isSuccess = customersMapper.insertSelective(customer);
         CheckUtil.checkBusinessException(isSuccess != 1, "create customer failed");
     }
 
+    /**
+     * 更新顾客信息业务实现
+     *
+     * @param customer 顾客信息业务模型
+     */
     @Transactional
     public void update(Customer customer) {
         int isSuccess = customersMapper.updateByPrimaryKeySelective(customer);
         CheckUtil.checkBusinessException(isSuccess != 1, "update customer failed");
     }
 
+    /**
+     * 删除顾客信息业务实现
+     *
+     * @param id 顾客信息业务模型
+     */
     @Transactional
     public void delete(Integer id) {
         int isSuccess = customersMapper.deleteByPrimaryKey(id);
@@ -47,9 +66,10 @@ public class CustomersServiceMysqlImpl {
         if (id != null) {
             Customer customerGetVo = customersMapper.selectByPrimaryKey(id);
             getListWrapper.setGetVoList(Lists.newArrayList(customerGetVo));
+
+        } else {
             long count = customersMapper.countAll(customersQueryCond);
             customersQueryCond.getPage().setCount(count);
-        } else {
             List<Customer> customerGetVos = customersMapper.selectAll(customersQueryCond);
             getListWrapper.setGetVoList(customerGetVos);
             getListWrapper.setPage(customersQueryCond.getPage());
