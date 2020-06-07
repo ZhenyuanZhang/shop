@@ -1,11 +1,16 @@
 package org.nj.zzy.product.controller.vendors;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
+import java.util.List;
+
 import org.nj.zzy.common.aop.operationlog.OperationLog;
 import org.nj.zzy.common.constant.BusinessType;
 import org.nj.zzy.common.domain.GetListWrapper;
 import org.nj.zzy.common.constant.OperationType;
 import org.nj.zzy.common.http.ResponseBean;
 import org.nj.zzy.common.constant.CommonErrorConstant;
+import org.nj.zzy.common.util.CustomFileUtil;
 import org.nj.zzy.common.validate.util.CheckUtil;
 import org.nj.zzy.product.domain.vendors.Vendor;
 import org.nj.zzy.product.domain.vendors.VendorQueryCond;
@@ -18,7 +23,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,7 +56,7 @@ public class VendorsController {
         log.info("[VendorsController] create vendor: {}", vendor);
         CheckUtil.checkBadRequest(vendor.getId() != null, CommonErrorConstant.MUST_BE_EMPTY, "id");
         vendorsServiceMysqlImpl.create(vendor);
-        return ResponseBean.getOK();
+        return ResponseBean.getOkAndData(null);
     }
 
     /**
@@ -65,7 +72,7 @@ public class VendorsController {
         log.info("[VendorsController] update vendor: {}", vendor);
         CheckUtil.checkBadRequest(vendor.getId() == null, CommonErrorConstant.CAN_NOT_BE_EMPTY, "id");
         vendorsServiceMysqlImpl.update(vendor);
-        return ResponseBean.getOK();
+        return ResponseBean.getOkAndData(null);
     }
 
     /**
@@ -80,11 +87,11 @@ public class VendorsController {
     public ResponseBean<?> deleteVendors(@PathVariable Integer id) {
         log.info("[VendorsController] delete vendor: {}", id);
         vendorsServiceMysqlImpl.delete(id);
-        return ResponseBean.getOK();
+        return ResponseBean.getOkAndData(null);
     }
 
     /**
-     * 插叙对应条件的Vendor接口
+     * 查询对应条件的Vendor接口
      *
      * @param queryCond 供应商业务标记
      * @return GetListWrapper 业务数据、分页信息
@@ -92,9 +99,8 @@ public class VendorsController {
     @GetMapping()
     public ResponseBean<GetListWrapper<?>> selectVendors(VendorQueryCond queryCond) {
         log.info("[VendorsController] get vendor: {}", queryCond);
-        ResponseBean<GetListWrapper<?>> response = ResponseBean.getOK();
-        response.setData(vendorsServiceMysqlImpl.selectAll(queryCond));
-        return response;
+        GetListWrapper<?> getListWrapper = vendorsServiceMysqlImpl.selectAll(queryCond);
+        return ResponseBean.getOkAndData(getListWrapper);
     }
 
 }

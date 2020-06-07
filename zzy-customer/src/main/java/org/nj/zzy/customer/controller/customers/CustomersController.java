@@ -49,7 +49,7 @@ public class CustomersController {
         log.info("[CustomersController] create customer: {}", customer);
         CheckUtil.checkBadRequest(customer.getId() != null, CommonErrorConstant.MUST_BE_EMPTY, "id");
         customersServiceMysqlImpl.create(customer);
-        return ResponseBean.getOK();
+        return ResponseBean.getOkAndData(null);
     }
 
     /**
@@ -65,7 +65,7 @@ public class CustomersController {
         log.info("[CustomersController] update customer: {}", customer);
         CheckUtil.checkBadRequest(customer.getId() == null, CommonErrorConstant.CAN_NOT_BE_EMPTY, "id");
         customersServiceMysqlImpl.update(customer);
-        return ResponseBean.getOK();
+        return ResponseBean.getOkAndData(null);
     }
 
     /**
@@ -80,7 +80,7 @@ public class CustomersController {
     public ResponseBean<?> deleteCustomers(@PathVariable Integer id) {
         log.info("[CustomersController] delete customer: {}", id);
         customersServiceMysqlImpl.delete(id);
-        return ResponseBean.getOK();
+        return ResponseBean.getOkAndData(null);
     }
 
     /**
@@ -93,9 +93,8 @@ public class CustomersController {
     @GetMapping()
     public ResponseBean<GetListWrapper<?>> selectCustomers(CustomerQueryCond queryCond) {
         log.info("[CustomersController] get customer: {}", queryCond);
-        ResponseBean<GetListWrapper<?>> response = ResponseBean.getOK();
-        response.setData(customersServiceMysqlImpl.selectAll(queryCond));
-        return response;
+        GetListWrapper<?> getListWrapper = customersServiceMysqlImpl.selectAll(queryCond);
+        return ResponseBean.getOkAndData(getListWrapper);
     }
 
 }

@@ -7,20 +7,21 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.nj.zzy.common.http.ResponseBean;
 import org.nj.zzy.common.http.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Zhenyuan Zhang
@@ -28,6 +29,8 @@ import com.google.common.collect.Maps;
  */
 @Aspect
 @Component
+@Order(20)
+@Slf4j
 public class OperationAspect {
 
     @Autowired(required = false)
@@ -41,9 +44,6 @@ public class OperationAspect {
     @Pointcut("@annotation(org.nj.zzy.common.aop.operationlog.OperationLog)")
     public void operationalLog() {}
 
-    @Before("operationalLog()")
-    public void doBefore(JoinPoint joinPoint) {}
-
     @Around("operationalLog()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
@@ -53,9 +53,10 @@ public class OperationAspect {
         Object[] args = joinPoint.getArgs();
 
         OperationLogDO operationLogDO = new OperationLogDO();
+        // 记录当前节点的Ip地址
         operationLogDO.setMetaData(InetAddress.getLocalHost().getHostAddress());
-        operationLogDO.setBusinessType(annotation.businessType().name());
-        operationLogDO.setOperationType(annotation.operationType().name());
+        operationLogDO.setBusinessType(annotation.businessType().lower());
+        operationLogDO.setOperationType(annotation.operationType().lower());
         if (annotation.saveArgs() && args != null && args.length > 0) {
             operationLogDO.setArgs(JSON
                 .toJSONString((Arrays.stream(args).map(OperationAspect::getObjectJson).collect(Collectors.toList()))));

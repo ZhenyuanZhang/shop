@@ -340,6 +340,55 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ExcelImport",
+			"item": [
+				{
+					"name": "ExcelImport",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Accept-Language",
+								"type": "text",
+								"value": "{{language}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/F:/ideaWorkSpace/github/shop/config/正常情况.xlsx"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{product}}/excel/import",
+							"host": [
+								"{{product}}"
+							],
+							"path": [
+								"excel",
+								"import"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"event": [

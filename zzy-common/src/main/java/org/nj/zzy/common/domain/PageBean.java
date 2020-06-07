@@ -2,12 +2,15 @@ package org.nj.zzy.common.domain;
 
 import java.util.Optional;
 
+import lombok.ToString;
+
 /**
  * 分页信息模型
  *
  * @author Zhenyuan Zhang
  * @time 2020-05-31 10:00
  */
+@ToString()
 public class PageBean {
     private static final Integer PAGE_SIZE = 30000;
 

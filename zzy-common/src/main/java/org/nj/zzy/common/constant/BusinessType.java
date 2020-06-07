@@ -9,6 +9,7 @@ package org.nj.zzy.common.constant;
 public enum BusinessType {
     NULL,
     VENDOR,
+    IMPORT_VENDOR,
     PRODUCT,
     CUSTOMER,
     ORDER,

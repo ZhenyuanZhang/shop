@@ -6,11 +6,14 @@ package org.nj.zzy.common.constant;
  */
 public interface CommonErrorConstant {
 
-    String PREPIX = "common.";
+    String PREFIX = "common.";
 
-    String CAN_NOT_BE_EMPTY = PREPIX + "can.not.be.empty";
-    String MUST_BE_EMPTY = PREPIX + "must.be.empty";
-    String LENGTH_OUT_OF_RANGE = PREPIX + "length.out.of.range";
-    String NUMBER_OUT_OF_RANGE = PREPIX + "number.out.of.range";
-    String VALUE_IS_INVALID = PREPIX + "value.invalid";
+    String CAN_NOT_BE_EMPTY = PREFIX + "can.not.be.empty";
+    String MUST_BE_EMPTY = PREFIX + "must.be.empty";
+    String LENGTH_OUT_OF_RANGE = PREFIX + "length.out.of.range";
+    String NUMBER_OUT_OF_RANGE = PREFIX + "number.out.of.range";
+    String VALUE_IS_INVALID = PREFIX + "value.invalid";
+    String FILE_TYPE_INVALID = PREFIX + "file.type.invalid";
+    String CONVERSION_FAILURE = PREFIX + "conversion.failure";
+
 }

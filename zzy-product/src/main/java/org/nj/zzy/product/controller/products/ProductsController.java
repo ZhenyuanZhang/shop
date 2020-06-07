@@ -46,10 +46,9 @@ public class ProductsController {
     @PostMapping()
     @OperationLog(businessType = BusinessType.PRODUCT, operationType = OperationType.CREATE)
     public ResponseBean<?> insert(@RequestBody Product product) {
-        log.info("[ProductsController] create product: {}", product);
         CheckUtil.checkBadRequest(product.getUuid() != null, CommonErrorConstant.MUST_BE_EMPTY, "uuid");
         productsServiceMysqlImpl.create(product);
-        return ResponseBean.getOK();
+        return ResponseBean.getOkAndData(null);
     }
 
     /**
@@ -62,10 +61,9 @@ public class ProductsController {
     @PutMapping()
     @OperationLog(businessType = BusinessType.PRODUCT, operationType = OperationType.UPDATE)
     public ResponseBean<?> update(@RequestBody Product product) {
-        log.info("[ProductsController] update product: {}", product);
         CheckUtil.checkBadRequest(product.getUuid() == null, CommonErrorConstant.CAN_NOT_BE_EMPTY, "uuid");
         productsServiceMysqlImpl.update(product);
-        return ResponseBean.getOK();
+        return ResponseBean.getOkAndData(null);
     }
 
     /**
@@ -78,9 +76,8 @@ public class ProductsController {
     @DeleteMapping("/{uuid}")
     @OperationLog(businessType = BusinessType.PRODUCT, operationType = OperationType.DELETE)
     public ResponseBean<?> deleteProducts(@PathVariable String uuid) {
-        log.info("[ProductsController] delete product: {}", uuid);
         productsServiceMysqlImpl.delete(uuid);
-        return ResponseBean.getOK();
+        return ResponseBean.getOkAndData(null);
     }
 
     /**
@@ -92,10 +89,8 @@ public class ProductsController {
      */
     @GetMapping()
     public ResponseBean<GetListWrapper<?>> selectProducts(ProductQueryCond queryCond) {
-        log.info("[ProductsController] get product: {}", queryCond);
-        ResponseBean<GetListWrapper<?>> response = ResponseBean.getOK();
-        response.setData(productsServiceMysqlImpl.selectAll(queryCond));
-        return response;
+        GetListWrapper<?> getListWrapper = productsServiceMysqlImpl.selectAll(queryCond);
+        return ResponseBean.getOkAndData(getListWrapper);
     }
 
 }

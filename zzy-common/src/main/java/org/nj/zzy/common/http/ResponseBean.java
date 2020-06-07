@@ -21,10 +21,11 @@ public class ResponseBean<T> {
         return responseBean;
     }
 
-    public static <T> ResponseBean<T> getOK() {
+    public static <T> ResponseBean<T> getOkAndData(T data) {
         ResponseBean<T> responseBean = new ResponseBean<>();
         responseBean.setCode(200);
         responseBean.setMessage("OK");
+        responseBean.setData(data);
         return responseBean;
     }
 }

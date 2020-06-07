@@ -16,6 +16,12 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/shop?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: root
     password: 123
+  servlet:
+    multipart:
+      # 上传文件总的最大值
+      max-request-size: 10MB
+      # 单个文件的最大值
+      max-file-size: 10MB
   # Redis
   redis:
     host: 127.0.0.1
